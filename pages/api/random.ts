@@ -3,14 +3,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prismadb from "../../lib/prismadb";
 import serverAuth from "../../lib/serverAuth";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== "GET") {
-    return res.status(405).end();
-  }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    if (req.method !== 'GET') {
+      return res.status(405).end();
+    }
+
     await serverAuth(req);
 
     const moviesCount = await prismadb.movie.count();
@@ -18,7 +16,7 @@ export default async function handler(
 
     const randomMovies = await prismadb.movie.findMany({
       take: 1,
-      skip: randomIndex,
+      skip: randomIndex
     });
 
     return res.status(200).json(randomMovies[0]);
